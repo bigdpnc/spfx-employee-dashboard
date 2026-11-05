@@ -101,7 +101,8 @@ export const FloatingControlPanel: React.FC<IFloatingControlPanelProps> = ({
   canvasLayout,
   onCanvasLayoutChange,
 }) => {
-  const [open, setOpen] = React.useState(true);
+  // Start open on desktop; on phones start closed so the dashboard is visible first.
+  const [open, setOpen] = React.useState(() => window.innerWidth > 700);
   const toggleRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
