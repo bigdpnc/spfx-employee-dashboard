@@ -1,0 +1,102 @@
+// Root of the dashboard: owns the design tokens (CSS custom properties) that every
+// child module reads. Switching `.light` ↔ `.dark` re-themes the whole web part
+// without touching component code.
+
+.dashboard {
+  // Size queries in child modules (`@container ed`) respond to the web part's width,
+  // which is what matters inside SharePoint's 1/2/3-column sections.
+  container-type: inline-size;
+  container-name: ed;
+
+  --ed-radius: 14px;
+  --ed-radius-lg: 20px;
+
+  font-family:
+    'Segoe UI Variable Text',
+    'Segoe UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    Roboto,
+    'Helvetica Neue',
+    sans-serif;
+  color: var(--ed-text);
+  background: var(--ed-bg);
+  border-radius: var(--ed-radius-lg);
+  transition:
+    background 200ms ease,
+    color 200ms ease;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+.light {
+  --ed-bg: #f4f6fb;
+  --ed-surface: #ffffff;
+  --ed-surface-2: #eef1f7;
+  --ed-border: #e3e7ef;
+  --ed-border-strong: #c3cad8;
+  --ed-text: #172033;
+  --ed-text-muted: #5d6880;
+
+  --ed-primary: #2f5bea;
+  --ed-primary-soft: #e6ecfd;
+  --ed-success: #12a26b;
+  --ed-success-soft: #e2f6ee;
+  --ed-warning: #b45309;
+  --ed-warning-soft: #fdf1e0;
+  --ed-danger: #d13438;
+  --ed-danger-soft: #fde8e8;
+
+  --ed-hero-bg: linear-gradient(135deg, #2f5bea 0%, #5b3fd6 55%, #8b3fd6 100%);
+  --ed-hero-text: #ffffff;
+  --ed-hero-glow: rgba(255, 255, 255, 0.28);
+
+  --ed-tile-mix: 12%;
+  --ed-shadow-sm: 0 1px 2px rgba(23, 32, 51, 0.06);
+  --ed-shadow: 0 10px 30px -12px rgba(23, 32, 51, 0.25);
+}
+
+.dark {
+  --ed-bg: #0e121b;
+  --ed-surface: #171c28;
+  --ed-surface-2: #212838;
+  --ed-border: #2a3244;
+  --ed-border-strong: #45506a;
+  --ed-text: #e8ecf5;
+  --ed-text-muted: #9aa5bd;
+
+  --ed-primary: #7c9bff;
+  --ed-primary-soft: rgba(124, 155, 255, 0.16);
+  --ed-success: #34d399;
+  --ed-success-soft: rgba(52, 211, 153, 0.14);
+  --ed-warning: #fbbf24;
+  --ed-warning-soft: rgba(251, 191, 36, 0.14);
+  --ed-danger: #f87171;
+  --ed-danger-soft: rgba(248, 113, 113, 0.14);
+
+  --ed-hero-bg: linear-gradient(135deg, #1f2f73 0%, #35226f 60%, #4a1f6e 100%);
+  --ed-hero-text: #f3f5ff;
+  --ed-hero-glow: rgba(140, 160, 255, 0.25);
+
+  --ed-tile-mix: 20%;
+  --ed-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ed-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.7);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 24px;
+}
+
+@container ed (max-width: 480px) {
+  .inner {
+    gap: 20px;
+    padding: 14px;
+  }
+}

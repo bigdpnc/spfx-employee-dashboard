@@ -1,0 +1,24 @@
+{
+  "name": "spfx-employee-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal Employee Dashboard web part for SharePoint Framework, with a standalone demo harness.",
+  "scripts": {
+    "dev": "vite --config demo/vite.config.ts",
+    "build:demo": "vite build --config demo/vite.config.ts",
+    "preview": "vite preview --config demo/vite.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.83",
+    "@types/react-dom": "17.0.25",
+    "@vitejs/plugin-react": "4.7.0",
+    "sass": "1.83.4",
+    "typescript": "5.4.5",
+    "vite": "5.4.19"
+  }
+}
