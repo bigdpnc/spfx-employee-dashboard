@@ -81,6 +81,9 @@ the delegated permission **Tasks.ReadWrite**. After uploading the package:
 Until it's approved, My Tasks shows a "couldn't load your tasks" message. Page editors can switch
 **Task source** to **Sample tasks** in the property pane to show example data instead.
 
+If something goes wrong, the message includes the Graph error (for example `HTTP 403 · Authorization_RequestDenied`)
+so it can be diagnosed without the browser console.
+
 What it loads: open tasks from every To Do list (except *Flagged email*), plus the most recently
 completed tasks from each list. Ticking a task marks it completed in To Do; if the save fails, the
 tick is undone and an error appears.

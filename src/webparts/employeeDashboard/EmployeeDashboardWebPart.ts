@@ -19,7 +19,7 @@ import {
   SAMPLE_TASKS,
   clampColumns
 } from '../../components';
-import { TODO_WEB_URL, TodoTaskService } from '../../services/TodoTaskService';
+import { TODO_WEB_URL, TodoTaskService, describeTodoError } from '../../services/TodoTaskService';
 
 export type TaskSource = 'todo' | 'sample';
 
@@ -44,8 +44,13 @@ export default class EmployeeDashboardWebPart extends BaseClientSideWebPart<IEmp
 
   protected async onInit(): Promise<void> {
     await super.onInit();
-    // Load tasks after the first render so the page isn't held up by Graph.
+    // Start loading without holding up the page; the first render shows the loading state.
     this._loadTasks().catch(() => undefined);
+  }
+
+  /** SharePoint must do the first render itself; calling render() during onInit breaks the page. */
+  private _rerender(): void {
+    if (this.renderedOnce) this.render();
   }
 
   public render(): void {
@@ -87,7 +92,7 @@ export default class EmployeeDashboardWebPart extends BaseClientSideWebPart<IEmp
     const loadId = ++this._loadId;
     this._tasksLoading = true;
     this._tasksError = undefined;
-    this.render();
+    this._rerender();
 
     try {
       if (!this._todo) {
@@ -98,12 +103,15 @@ export default class EmployeeDashboardWebPart extends BaseClientSideWebPart<IEmp
       this._tasks = tasks;
     } catch (err) {
       if (loadId !== this._loadId) return;
-      console.error('[EmployeeDashboard] Could not load To Do tasks', err);
+      const { kind, detail } = describeTodoError(err);
+      console.error('[EmployeeDashboard] Could not load To Do tasks', detail, err);
       this._tasks = [];
-      this._tasksError = strings.TodoLoadError;
+      const message =
+        kind === 'permission' ? strings.TodoPermissionError : kind === 'noMailbox' ? strings.TodoNoMailboxError : strings.TodoLoadError;
+      this._tasksError = detail ? `${message} (${detail})` : message;
     }
     this._tasksLoading = false;
-    this.render();
+    this._rerender();
   }
 
   private async _saveTask(task: ITask): Promise<void> {

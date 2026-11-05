@@ -9,6 +9,8 @@ declare interface IEmployeeDashboardWebPartStrings {
   TodoSourceName: string;
   SampleSourceName: string;
   TodoLoadError: string;
+  TodoPermissionError: string;
+  TodoNoMailboxError: string;
   On: string;
   Off: string;
 }
