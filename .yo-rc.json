@@ -1,0 +1,23 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "whichFolder": "subdir",
+    "solutionName": "spfx-employee-dashboard",
+    "environment": "spo",
+    "packageManager": "npm",
+    "skipFeatureDeployment": true,
+    "useGulp": false,
+    "componentType": "webpart",
+    "template": "react",
+    "componentName": "EmployeeDashboard",
+    "componentDescription": "Personal employee dashboard with greeting, quick links and tasks",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.23.4",
+    "sdksVersions": {},
+    "version": "1.23.2",
+    "libraryName": "spfx-employee-dashboard",
+    "libraryId": "65483ee5-37fb-4c30-b75b-01ad2c44fc6e",
+    "solutionShortDescription": "spfx-employee-dashboard description",
+    "isDomainIsolated": false
+  }
+}

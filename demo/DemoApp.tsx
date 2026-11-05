@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { EmployeeDashboard, ITask, clampColumns } from '../src/components';
+import { EmployeeDashboard, ITask, SAMPLE_TASKS, clampColumns } from '../src/components';
 import { CANVAS_LAYOUTS, CanvasLayout, FloatingControlPanel } from './FloatingControlPanel';
 import { DEFAULT_WEB_PART_PROPERTIES, IEmployeeDashboardWebPartProps, getPropertyPaneConfiguration } from './mockPropertyPane';
-import { mockTasks, mockUser } from './mockContext';
+import { mockUser } from './mockContext';
 
 const STORAGE_KEY = 'ed-demo-properties';
 
@@ -62,7 +62,7 @@ export const DemoApp: React.FC = () => {
           user={mockUser}
           isDarkTheme={state.isDarkTheme}
           quickLinksColumns={clampColumns(state.quickLinksColumns)}
-          tasks={mockTasks}
+          tasks={SAMPLE_TASKS}
           onTaskToggle={onTaskToggle}
         />
       </main>

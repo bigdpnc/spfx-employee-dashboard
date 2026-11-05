@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "Employee Dashboard",
+    "id": "65483ee5-37fb-4c30-b75b-01ad2c44fc6e",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.23.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "Personal Employee Dashboard: greeting, quick links and tasks."
+      },
+      "longDescription": {
+        "default": "Personal Employee Dashboard: greeting, quick links and tasks."
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "Employee Dashboard",
+        "description": "The feature that activates elements of the spfx-employee-dashboard solution.",
+        "id": "a971158e-a1a1-49a8-88c4-aac480dcac0d",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/spfx-employee-dashboard.sppkg"
+  }
+}

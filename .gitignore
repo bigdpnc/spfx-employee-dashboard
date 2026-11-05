@@ -3,3 +3,17 @@ dist/
 demo/dist/
 *.log
 .DS_Store
+
+# SPFx build output
+lib/
+lib-dts/
+lib-commonjs/
+lib-esm/
+jest-output/
+release/
+solution/
+temp/
+.heft/
+*.sppkg
+*.scss.ts
+_scaffold/

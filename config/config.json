@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "employee-dashboard-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/employeeDashboard/EmployeeDashboardWebPart.js",
+          "manifest": "./src/webparts/employeeDashboard/EmployeeDashboardWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "EmployeeDashboardWebPartStrings": "lib/webparts/employeeDashboard/loc/{locale}.js"
+  }
+}
