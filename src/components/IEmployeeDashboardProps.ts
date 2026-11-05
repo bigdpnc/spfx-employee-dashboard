@@ -65,8 +65,21 @@ export interface IEmployeeDashboardProps {
   /** Defaults to `DEFAULT_QUICK_LINKS` when omitted. */
   quickLinks?: IQuickLink[];
   tasks?: ITask[];
-  /** Called after a task is checked / unchecked, so the host can persist the change. */
-  onTaskToggle?: (task: ITask) => void;
+  /** True while tasks are being fetched (shows a loading placeholder). */
+  tasksLoading?: boolean;
+  /** Message shown instead of the task list when tasks could not be loaded. */
+  tasksError?: string;
+  /** Shows a "Try again" button next to `tasksError`. */
+  onRetryTasks?: () => void;
+  /** Where tasks come from, e.g. "Microsoft To Do". Shown under the heading. */
+  tasksSourceName?: string;
+  /** Link to the task source, e.g. the To Do web app. */
+  tasksSourceUrl?: string;
+  /**
+   * Called after a task is checked / unchecked, so the host can persist the change.
+   * If it returns a promise that rejects, the change is rolled back and an error is shown.
+   */
+  onTaskToggle?: (task: ITask) => void | Promise<void>;
   /** Override "now" (useful for demos and tests). */
   now?: Date;
 }

@@ -1,6 +1,6 @@
 {
   "name": "spfx-employee-dashboard",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Personal Employee Dashboard web part for SharePoint Framework, with a standalone demo harness.",
   "engines": {
@@ -24,6 +24,7 @@
     "@microsoft/sp-core-library": "1.23.2",
     "@microsoft/sp-component-base": "1.23.2",
     "@microsoft/sp-property-pane": "1.23.2",
+    "@microsoft/sp-http": "1.23.2",
     "@microsoft/sp-webpart-base": "1.23.2",
     "@microsoft/sp-lodash-subset": "1.23.2",
     "@microsoft/sp-office-ui-fabric-core": "1.23.2"

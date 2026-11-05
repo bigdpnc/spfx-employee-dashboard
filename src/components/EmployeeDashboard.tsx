@@ -29,12 +29,29 @@ function toIsoDate(d: Date): string {
 }
 
 export const EmployeeDashboard: React.FC<IEmployeeDashboardProps> = (props) => {
-  const { user, isDarkTheme, quickLinksColumns, quickLinks = DEFAULT_QUICK_LINKS, tasks: taskProp = EMPTY_TASKS, onTaskToggle } = props;
+  const {
+    user,
+    isDarkTheme,
+    quickLinksColumns,
+    quickLinks = DEFAULT_QUICK_LINKS,
+    tasks: taskProp = EMPTY_TASKS,
+    tasksLoading = false,
+    tasksError,
+    onRetryTasks,
+    tasksSourceName,
+    tasksSourceUrl,
+    onTaskToggle,
+  } = props;
   const now = useNow(props.now);
 
-  // Local copy so checking a task is instant; the host persists via onTaskToggle.
+  // Local copy so checking a task is instant (optimistic); the host persists via onTaskToggle.
   const [tasks, setTasks] = React.useState<ITask[]>(taskProp);
-  React.useEffect(() => setTasks(taskProp), [taskProp]);
+  const [actionError, setActionError] = React.useState<string | undefined>(undefined);
+  React.useEffect(() => {
+    // Fresh data from the host replaces the local copy and clears any stale save error.
+    setTasks(taskProp);
+    setActionError(undefined);
+  }, [taskProp]);
 
   const handleToggle = React.useCallback(
     (id: string) => {
@@ -43,8 +60,17 @@ export const EmployeeDashboard: React.FC<IEmployeeDashboardProps> = (props) => {
       const updated: ITask = current.completed
         ? { ...current, completed: false, completedOn: undefined }
         : { ...current, completed: true, completedOn: toIsoDate(new Date()) };
+      setActionError(undefined);
       setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
-      if (onTaskToggle) onTaskToggle(updated);
+
+      const result = onTaskToggle ? onTaskToggle(updated) : undefined;
+      if (result && typeof result.then === 'function') {
+        result.then(undefined, () => {
+          // Roll back and tell the user; the task source is the source of truth.
+          setTasks((prev) => prev.map((t) => (t.id === id ? current : t)));
+          setActionError(`Couldn't update "${current.title}". Check your connection and try again.`);
+        });
+      }
     },
     [tasks, onTaskToggle],
   );
@@ -62,9 +88,20 @@ export const EmployeeDashboard: React.FC<IEmployeeDashboardProps> = (props) => {
           pendingCount={pending.length}
           dueTodayCount={dueTodayCount}
           overdueCount={overdueCount}
+          tasksAvailable={!tasksLoading && !tasksError}
         />
         <QuickLinks links={quickLinks} columns={quickLinksColumns} />
-        <MyTasks tasks={tasks} now={now} onToggle={handleToggle} />
+        <MyTasks
+          tasks={tasks}
+          now={now}
+          onToggle={handleToggle}
+          loading={tasksLoading}
+          error={tasksError}
+          onRetry={onRetryTasks}
+          actionError={actionError}
+          sourceName={tasksSourceName}
+          sourceUrl={tasksSourceUrl}
+        />
       </div>
     </div>
   );

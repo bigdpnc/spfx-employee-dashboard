@@ -2,12 +2,20 @@ import * as React from 'react';
 import styles from './MyTasks.module.scss';
 import { ITask } from './IEmployeeDashboardProps';
 import { describeDue, formatShortDate, parseDate } from './dateUtils';
-import { CheckIcon, ClockIcon } from './icons';
+import { ArrowIcon, CheckIcon, ClockIcon } from './icons';
 
 export interface IMyTasksProps {
   tasks: ITask[];
   now: Date;
   onToggle: (id: string) => void;
+  loading?: boolean;
+  /** Load failure: replaces the list. */
+  error?: string;
+  onRetry?: () => void;
+  /** Save failure for a single task: shown above the list. */
+  actionError?: string;
+  sourceName?: string;
+  sourceUrl?: string;
 }
 
 type TabKey = 'pending' | 'completed';
@@ -34,7 +42,17 @@ function sortCompleted(a: ITask, b: ITask): number {
   return bc - ac;
 }
 
-export const MyTasks: React.FC<IMyTasksProps> = ({ tasks, now, onToggle }) => {
+export const MyTasks: React.FC<IMyTasksProps> = ({
+  tasks,
+  now,
+  onToggle,
+  loading = false,
+  error,
+  onRetry,
+  actionError,
+  sourceName,
+  sourceUrl,
+}) => {
   const [activeTab, setActiveTab] = React.useState<TabKey>('pending');
   const tabRefs = React.useRef<Record<TabKey, HTMLButtonElement | null>>({ pending: null, completed: null });
 
@@ -67,7 +85,20 @@ export const MyTasks: React.FC<IMyTasksProps> = ({ tasks, now, onToggle }) => {
         <div>
           <h3 id="ed-tasks-heading">My Tasks</h3>
           <p className={styles.progressLabel}>
-            {completed.length} of {tasks.length} done
+            {loading || error ? null : (
+              <span>
+                {completed.length} of {tasks.length} done
+              </span>
+            )}
+            {sourceName && sourceUrl ? (
+              <a className={styles.sourceLink} href={sourceUrl} target="_blank" rel="noopener noreferrer">
+                {sourceName}
+                <ArrowIcon size={12} />
+                <span className={styles.srOnly}> (opens in a new tab)</span>
+              </a>
+            ) : sourceName ? (
+              <span>{sourceName}</span>
+            ) : null}
           </p>
         </div>
         <div
@@ -102,7 +133,7 @@ export const MyTasks: React.FC<IMyTasksProps> = ({ tasks, now, onToggle }) => {
               onKeyDown={onTabKeyDown}
             >
               {tab.label}
-              <span className={styles.badge}>{counts[tab.key]}</span>
+              {loading || error ? null : <span className={styles.badge}>{counts[tab.key]}</span>}
             </button>
           );
         })}
@@ -115,7 +146,33 @@ export const MyTasks: React.FC<IMyTasksProps> = ({ tasks, now, onToggle }) => {
         aria-labelledby={`ed-tab-${activeTab}`}
         tabIndex={0}
       >
-        {visible.length === 0 ? (
+        {actionError && !loading && !error ? (
+          <p className={styles.actionError} role="alert">
+            {actionError}
+          </p>
+        ) : null}
+        {loading ? (
+          <ul className={styles.list} aria-busy="true" aria-label="Loading tasks">
+            {[0, 1, 2].map((i) => (
+              <li key={i} className={styles.item}>
+                <span className={`${styles.skeleton} ${styles.skeletonBox}`} />
+                <span className={styles.itemBody}>
+                  <span className={`${styles.skeleton} ${styles.skeletonLine}`} style={{ width: `${70 - i * 12}%` }} />
+                  <span className={`${styles.skeleton} ${styles.skeletonLine} ${styles.skeletonShort}`} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : error ? (
+          <div className={styles.errorState} role="alert">
+            <p>{error}</p>
+            {onRetry ? (
+              <button type="button" className={styles.retry} onClick={onRetry}>
+                Try again
+              </button>
+            ) : null}
+          </div>
+        ) : visible.length === 0 ? (
           <div className={styles.empty}>
             <span className={styles.emptyIcon} aria-hidden="true">
               <CheckIcon size={22} />

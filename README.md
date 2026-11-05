@@ -33,6 +33,7 @@ Use the floating ⚙ button (bottom right) to:
 - toggle **Dark mode** (`isDarkTheme`)
 - change **Visible columns** in Quick Links (`quickLinksColumns`, 1–6)
 - *(demo only)* change the simulated SharePoint section width to check the responsive grid
+- *(demo only)* simulate the To Do connection: loading, load error, or a failed save
 
 Settings are saved in `localStorage`, so they survive a reload.
 
@@ -67,7 +68,22 @@ You need to be a SharePoint admin, or have rights to the tenant App Catalog.
 3. In the dialog, choose **Enable this app and add it to all sites** (or **Only enable this app** to
    add it site by site under *Site contents → New → App*), then **Enable**.
 4. Edit any modern page, click **+**, search for **Employee Dashboard**, add it and **Republish**.
-5. Click the web part's ✏️ edit icon to open the property pane: Dark mode, Visible columns, Show sample tasks.
+5. Click the web part's ✏️ edit icon to open the property pane: Dark mode, Visible columns, Task source.
+
+### Approve the To Do permission (one time)
+
+My Tasks reads and updates each person's own Microsoft To Do tasks through Microsoft Graph, using
+the delegated permission **Tasks.ReadWrite**. After uploading the package:
+
+1. Go to **SharePoint admin center → Advanced → API access**.
+2. Under **Pending requests**, approve **Microsoft Graph · Tasks.ReadWrite**.
+
+Until it's approved, My Tasks shows a "couldn't load your tasks" message. Page editors can switch
+**Task source** to **Sample tasks** in the property pane to show example data instead.
+
+What it loads: open tasks from every To Do list (except *Flagged email*), plus the most recently
+completed tasks from each list. Ticking a task marks it completed in To Do; if the save fails, the
+tick is undone and an error appears.
 
 To ship an update, bump `version` in `config/package-solution.json`, rebuild, and upload the new
 `.sppkg` over the old one.
@@ -77,5 +93,7 @@ To ship an update, bump `version` in `config/package-solution.json`, rebuild, an
 - `src/webparts/employeeDashboard/EmployeeDashboardWebPart.ts` reads the signed-in user from
   `this.context.pageContext.user`, loads their profile photo, and defines the real property pane.
 - `src/components/` is shared by the web part and the demo.
-- `src/components/sampleTasks.ts` holds the example tasks shown until a real task source
-  (Microsoft To Do / Planner via Graph) is connected. Turn them off with **Show sample tasks**.
+- `src/services/TodoTaskService.ts` loads and updates Microsoft To Do tasks via Graph
+  (`MSGraphClientV3`).
+- `src/components/sampleTasks.ts` holds the example tasks used when **Task source** is
+  **Sample tasks**, and in the demo.

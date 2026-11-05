@@ -24,7 +24,7 @@
     "properties": {
       "isDarkTheme": false,
       "quickLinksColumns": 4,
-      "showSampleTasks": true
+      "taskSource": "todo"
     }
   }]
 }

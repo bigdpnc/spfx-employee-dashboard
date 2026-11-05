@@ -10,6 +10,8 @@ export interface IGreetingHeaderProps {
   pendingCount: number;
   dueTodayCount: number;
   overdueCount: number;
+  /** False while tasks are loading or failed to load, so the summary doesn't claim "all caught up". */
+  tasksAvailable?: boolean;
 }
 
 function getInitials(name: string): string {
@@ -35,7 +37,14 @@ function buildSummary(pending: number, dueToday: number, overdue: number): strin
   return parts.join(' · ');
 }
 
-export const GreetingHeader: React.FC<IGreetingHeaderProps> = ({ user, now, pendingCount, dueTodayCount, overdueCount }) => {
+export const GreetingHeader: React.FC<IGreetingHeaderProps> = ({
+  user,
+  now,
+  pendingCount,
+  dueTodayCount,
+  overdueCount,
+  tasksAvailable = true,
+}) => {
   const [photoFailed, setPhotoFailed] = React.useState(false);
   React.useEffect(() => setPhotoFailed(false), [user.photoUrl]);
 
@@ -60,7 +69,7 @@ export const GreetingHeader: React.FC<IGreetingHeaderProps> = ({ user, now, pend
           {getGreeting(now)}, {getFirstName(user.displayName)}
         </h2>
         <p className={styles.summary}>
-          {buildSummary(pendingCount, dueTodayCount, overdueCount)}
+          {tasksAvailable ? buildSummary(pendingCount, dueTodayCount, overdueCount) : "Here's your day at a glance."}
           {user.jobTitle ? <span className={styles.role}>{user.jobTitle}</span> : null}
         </p>
       </div>

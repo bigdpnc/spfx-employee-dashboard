@@ -25,9 +25,43 @@
 }
 
 .progressLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
   margin: 2px 0 0;
   font-size: 13px;
   color: var(--ed-text-muted);
+}
+
+.sourceLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ed-primary);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ed-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 .progress {
@@ -266,4 +300,88 @@
   border-radius: 50%;
   background: var(--ed-success-soft);
   color: var(--ed-success);
+}
+
+.actionError {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--ed-danger-soft);
+  color: var(--ed-danger);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--ed-text-muted);
+
+  p {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 14px;
+  }
+}
+
+.retry {
+  padding: 7px 16px;
+  border: 1px solid var(--ed-border-strong);
+  border-radius: 9px;
+  background: var(--ed-surface);
+  color: var(--ed-text);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--ed-primary);
+    color: var(--ed-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ed-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Loading placeholder rows
+.skeleton {
+  display: block;
+  border-radius: 6px;
+  background: var(--ed-surface-2);
+  animation: ed-pulse 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.skeletonBox {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+}
+
+.skeletonLine {
+  height: 12px;
+}
+
+.skeletonShort {
+  width: 30%;
+}
+
+@keyframes ed-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }

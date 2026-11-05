@@ -3,6 +3,16 @@ import { IPropertyPaneConfiguration, IPropertyPaneField, PropertyPaneFieldType }
 
 export type CanvasLayout = 'full' | 'one' | 'twoThirds' | 'oneThird';
 
+/** Demo-only: simulate what the To Do connection can do in SharePoint. */
+export type TaskState = 'loaded' | 'loading' | 'error' | 'saveFails';
+
+export const TASK_STATES: { key: TaskState; label: string }[] = [
+  { key: 'loaded', label: 'Loaded' },
+  { key: 'loading', label: 'Loading' },
+  { key: 'error', label: 'Load error' },
+  { key: 'saveFails', label: 'Save fails' },
+];
+
 export const CANVAS_LAYOUTS: { key: CanvasLayout; label: string; width: string }[] = [
   { key: 'full', label: 'Full width', width: '100%' },
   { key: 'one', label: 'One column', width: '1200px' },
@@ -18,6 +28,8 @@ interface IFloatingControlPanelProps {
   onReset: () => void;
   canvasLayout: CanvasLayout;
   onCanvasLayoutChange: (layout: CanvasLayout) => void;
+  taskState: TaskState;
+  onTaskStateChange: (state: TaskState) => void;
 }
 
 const GearIcon: React.FC = () => (
@@ -100,6 +112,8 @@ export const FloatingControlPanel: React.FC<IFloatingControlPanelProps> = ({
   onReset,
   canvasLayout,
   onCanvasLayoutChange,
+  taskState,
+  onTaskStateChange,
 }) => {
   // Start open on desktop; on phones start closed so the dashboard is visible first.
   const [open, setOpen] = React.useState(() => window.innerWidth > 700);
@@ -170,6 +184,25 @@ export const FloatingControlPanel: React.FC<IFloatingControlPanelProps> = ({
                 ))}
               </div>
               <p className="pp-hint">Shrinks the web part to test the responsive Quick Links grid.</p>
+            </fieldset>
+
+            <fieldset className="pp-group pp-group-demo">
+              <legend>Demo only · To Do connection</legend>
+              <div className="pp-segment" role="radiogroup" aria-label="Simulated To Do connection state">
+                {TASK_STATES.map((t) => (
+                  <button
+                    key={t.key}
+                    type="button"
+                    role="radio"
+                    aria-checked={taskState === t.key}
+                    className={taskState === t.key ? 'is-active' : ''}
+                    onClick={() => onTaskStateChange(t.key)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+              <p className="pp-hint">Shows how My Tasks behaves while loading, if loading fails, or if ticking a task can't be saved.</p>
             </fieldset>
           </div>
 

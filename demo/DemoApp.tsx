@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { EmployeeDashboard, ITask, SAMPLE_TASKS, clampColumns } from '../src/components';
-import { CANVAS_LAYOUTS, CanvasLayout, FloatingControlPanel } from './FloatingControlPanel';
+import { CANVAS_LAYOUTS, CanvasLayout, FloatingControlPanel, TaskState } from './FloatingControlPanel';
 import { DEFAULT_WEB_PART_PROPERTIES, IEmployeeDashboardWebPartProps, getPropertyPaneConfiguration } from './mockPropertyPane';
 import { mockUser } from './mockContext';
 
@@ -11,6 +11,9 @@ interface IDemoState extends IEmployeeDashboardWebPartProps {
 }
 
 const DEFAULT_STATE: IDemoState = { ...DEFAULT_WEB_PART_PROPERTIES, canvasLayout: 'one' };
+
+const LOAD_ERROR =
+  "We couldn't load your tasks from Microsoft To Do. If this keeps happening, ask your SharePoint admin to approve the Tasks.ReadWrite permission under API access.";
 
 // localStorage is a convenience only; the demo works without it (private mode, etc.).
 function loadState(): IDemoState {
@@ -42,10 +45,19 @@ export const DemoApp: React.FC = () => {
     setState((s) => ({ ...s, [propertyPath]: newValue }));
   };
 
-  const onTaskToggle = React.useCallback((task: ITask) => {
-    // In SharePoint this is where you'd PATCH Planner / To Do / a list item.
-    console.info('[demo] task toggled', task);
-  }, []);
+  // Not persisted: the demo always opens with real data showing.
+  const [taskState, setTaskState] = React.useState<TaskState>('loaded');
+
+  const onTaskToggle = React.useCallback(
+    (task: ITask): Promise<void> => {
+      // In SharePoint this PATCHes the task in Microsoft To Do via Graph.
+      console.info('[demo] task toggled', task);
+      return new Promise((resolve, reject) => {
+        window.setTimeout(() => (taskState === 'saveFails' ? reject(new Error('Simulated save failure')) : resolve()), 600);
+      });
+    },
+    [taskState],
+  );
 
   const width = CANVAS_LAYOUTS.filter((l) => l.key === state.canvasLayout)[0].width;
 
@@ -63,6 +75,11 @@ export const DemoApp: React.FC = () => {
           isDarkTheme={state.isDarkTheme}
           quickLinksColumns={clampColumns(state.quickLinksColumns)}
           tasks={SAMPLE_TASKS}
+          tasksLoading={taskState === 'loading'}
+          tasksError={taskState === 'error' ? LOAD_ERROR : undefined}
+          onRetryTasks={() => setTaskState('loaded')}
+          tasksSourceName="Microsoft To Do"
+          tasksSourceUrl="https://to-do.office.com/tasks/"
           onTaskToggle={onTaskToggle}
         />
       </main>
@@ -74,6 +91,8 @@ export const DemoApp: React.FC = () => {
         onReset={() => setState(DEFAULT_STATE)}
         canvasLayout={state.canvasLayout}
         onCanvasLayoutChange={(canvasLayout) => setState((s) => ({ ...s, canvasLayout }))}
+        taskState={taskState}
+        onTaskStateChange={setTaskState}
       />
     </div>
   );

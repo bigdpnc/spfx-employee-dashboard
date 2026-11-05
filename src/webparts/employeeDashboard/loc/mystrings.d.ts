@@ -5,7 +5,10 @@ declare interface IEmployeeDashboardWebPartStrings {
   QuickLinksGroupName: string;
   ColumnsLabel: string;
   TasksGroupName: string;
-  SampleTasksLabel: string;
+  TaskSourceLabel: string;
+  TodoSourceName: string;
+  SampleSourceName: string;
+  TodoLoadError: string;
   On: string;
   Off: string;
 }
