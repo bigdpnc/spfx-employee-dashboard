@@ -3,7 +3,7 @@
   "solution": {
     "name": "Employee Dashboard",
     "id": "65483ee5-37fb-4c30-b75b-01ad2c44fc6e",
-    "version": "1.1.1.0",
+    "version": "1.2.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -36,7 +36,7 @@
         "title": "Employee Dashboard",
         "description": "The feature that activates elements of the spfx-employee-dashboard solution.",
         "id": "a971158e-a1a1-49a8-88c4-aac480dcac0d",
-        "version": "1.1.1.0"
+        "version": "1.2.0.0"
       }
     ]
   },

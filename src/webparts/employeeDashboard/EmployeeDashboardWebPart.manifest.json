@@ -24,7 +24,8 @@
     "properties": {
       "isDarkTheme": false,
       "quickLinksColumns": 4,
-      "taskSource": "todo"
+      "taskSource": "todo",
+      "quickLinksListTitle": "Dashboard Quick Links"
     }
   }]
 }

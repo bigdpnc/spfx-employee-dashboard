@@ -41,6 +41,16 @@ export interface IQuickLink {
   openInNewTab?: boolean;
 }
 
+export interface IDashboardNotice {
+  message: string;
+  actionLabel?: string;
+  onAction?: () => void;
+  /** Disables the action and shows a busy label while it runs. */
+  busy?: boolean;
+  busyLabel?: string;
+  tone?: 'info' | 'error';
+}
+
 export type TaskPriority = 'high' | 'medium' | 'low';
 
 export interface ITask {
@@ -64,6 +74,12 @@ export interface IEmployeeDashboardProps {
   quickLinksColumns: number;
   /** Defaults to `DEFAULT_QUICK_LINKS` when omitted. */
   quickLinks?: IQuickLink[];
+  /** True while Quick Links are loading (shows placeholder cards). */
+  quickLinksLoading?: boolean;
+  /** Shown instead of the grid, e.g. "list not set up yet", with an optional action button. */
+  quickLinksNotice?: IDashboardNotice;
+  /** "Manage links" link next to the heading, for people who can edit the list. */
+  quickLinksManageUrl?: string;
   tasks?: ITask[];
   /** True while tasks are being fetched (shows a loading placeholder). */
   tasksLoading?: boolean;

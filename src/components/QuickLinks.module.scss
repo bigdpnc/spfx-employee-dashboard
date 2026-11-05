@@ -16,9 +16,33 @@
   }
 }
 
+.headingMeta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
 .count {
   font-size: 13px;
   color: var(--ed-text-muted);
+}
+
+.manage {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ed-primary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ed-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 .grid {
@@ -159,4 +183,98 @@
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+.notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 18px 20px;
+  border: 1px dashed var(--ed-border-strong);
+  border-radius: var(--ed-radius);
+  background: var(--ed-surface);
+  color: var(--ed-text-muted);
+
+  p {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 14px;
+  }
+}
+
+.noticeError {
+  border-style: solid;
+  border-color: var(--ed-danger-soft);
+  background: var(--ed-danger-soft);
+  color: var(--ed-danger);
+}
+
+.noticeButton {
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: var(--ed-primary);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: progress;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ed-primary);
+    outline-offset: 2px;
+  }
+}
+
+.skeletonCard {
+  pointer-events: none;
+
+  &:hover {
+    transform: none;
+    box-shadow: var(--ed-shadow-sm);
+  }
+}
+
+.skeleton {
+  display: block;
+  border-radius: 6px;
+  background: var(--ed-surface-2);
+  animation: ql-pulse 1.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.skeletonLine {
+  width: 120px;
+  max-width: 100%;
+  height: 12px;
+  margin: 3px 0;
+}
+
+.skeletonShort {
+  width: 80px;
+}
+
+@keyframes ql-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
 }

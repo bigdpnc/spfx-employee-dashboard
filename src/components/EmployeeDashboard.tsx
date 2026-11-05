@@ -34,6 +34,9 @@ export const EmployeeDashboard: React.FC<IEmployeeDashboardProps> = (props) => {
     isDarkTheme,
     quickLinksColumns,
     quickLinks = DEFAULT_QUICK_LINKS,
+    quickLinksLoading = false,
+    quickLinksNotice,
+    quickLinksManageUrl,
     tasks: taskProp = EMPTY_TASKS,
     tasksLoading = false,
     tasksError,
@@ -90,7 +93,13 @@ export const EmployeeDashboard: React.FC<IEmployeeDashboardProps> = (props) => {
           overdueCount={overdueCount}
           tasksAvailable={!tasksLoading && !tasksError}
         />
-        <QuickLinks links={quickLinks} columns={quickLinksColumns} />
+        <QuickLinks
+          links={quickLinks}
+          columns={quickLinksColumns}
+          loading={quickLinksLoading}
+          notice={quickLinksNotice}
+          manageUrl={quickLinksManageUrl}
+        />
         <MyTasks
           tasks={tasks}
           now={now}

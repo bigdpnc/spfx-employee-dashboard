@@ -6,6 +6,16 @@ export type CanvasLayout = 'full' | 'one' | 'twoThirds' | 'oneThird';
 /** Demo-only: simulate what the To Do connection can do in SharePoint. */
 export type TaskState = 'loaded' | 'loading' | 'error' | 'saveFails';
 
+/** Demo-only: simulate the Quick Links list in SharePoint. */
+export type LinksState = 'loaded' | 'loading' | 'missing' | 'empty';
+
+export const LINKS_STATES: { key: LinksState; label: string }[] = [
+  { key: 'loaded', label: 'Loaded' },
+  { key: 'loading', label: 'Loading' },
+  { key: 'missing', label: 'No list yet' },
+  { key: 'empty', label: 'Empty list' },
+];
+
 export const TASK_STATES: { key: TaskState; label: string }[] = [
   { key: 'loaded', label: 'Loaded' },
   { key: 'loading', label: 'Loading' },
@@ -30,6 +40,8 @@ interface IFloatingControlPanelProps {
   onCanvasLayoutChange: (layout: CanvasLayout) => void;
   taskState: TaskState;
   onTaskStateChange: (state: TaskState) => void;
+  linksState: LinksState;
+  onLinksStateChange: (state: LinksState) => void;
 }
 
 const GearIcon: React.FC = () => (
@@ -114,6 +126,8 @@ export const FloatingControlPanel: React.FC<IFloatingControlPanelProps> = ({
   onCanvasLayoutChange,
   taskState,
   onTaskStateChange,
+  linksState,
+  onLinksStateChange,
 }) => {
   // Start open on desktop; on phones start closed so the dashboard is visible first.
   const [open, setOpen] = React.useState(() => window.innerWidth > 700);
@@ -184,6 +198,25 @@ export const FloatingControlPanel: React.FC<IFloatingControlPanelProps> = ({
                 ))}
               </div>
               <p className="pp-hint">Shrinks the web part to test the responsive Quick Links grid.</p>
+            </fieldset>
+
+            <fieldset className="pp-group pp-group-demo">
+              <legend>Demo only · Quick Links list</legend>
+              <div className="pp-segment" role="radiogroup" aria-label="Simulated Quick Links list state">
+                {LINKS_STATES.map((t) => (
+                  <button
+                    key={t.key}
+                    type="button"
+                    role="radio"
+                    aria-checked={linksState === t.key}
+                    className={linksState === t.key ? 'is-active' : ''}
+                    onClick={() => onLinksStateChange(t.key)}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+              <p className="pp-hint">Links come from a SharePoint list. "No list yet" is what a site owner sees before creating it.</p>
             </fieldset>
 
             <fieldset className="pp-group pp-group-demo">

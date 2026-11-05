@@ -1,12 +1,15 @@
 import * as React from 'react';
 import styles from './QuickLinks.module.scss';
-import { IQuickLink } from './IEmployeeDashboardProps';
+import { IDashboardNotice, IQuickLink } from './IEmployeeDashboardProps';
 import { ArrowIcon, DashboardIcon } from './icons';
 
 export interface IQuickLinksProps {
   links: IQuickLink[];
   /** Columns at full width. Narrow containers automatically drop to 2, then 1. */
   columns: number;
+  loading?: boolean;
+  notice?: IDashboardNotice;
+  manageUrl?: string;
 }
 
 export const MIN_COLUMNS = 1;
@@ -17,7 +20,7 @@ export function clampColumns(value: number): number {
   return Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, Math.round(value)));
 }
 
-export const QuickLinks: React.FC<IQuickLinksProps> = ({ links, columns }) => {
+export const QuickLinks: React.FC<IQuickLinksProps> = ({ links, columns, loading = false, notice, manageUrl }) => {
   const cols = clampColumns(columns);
 
   // CSS custom properties drive the grid, so changing columns never re-mounts cards.
@@ -30,11 +33,48 @@ export const QuickLinks: React.FC<IQuickLinksProps> = ({ links, columns }) => {
     <section className={styles.section} aria-labelledby="ed-quicklinks-heading">
       <div className={styles.heading}>
         <h3 id="ed-quicklinks-heading">Quick Links</h3>
-        <span className={styles.count}>{links.length} apps</span>
+        <span className={styles.headingMeta}>
+          {!loading && !notice ? (
+            <span className={styles.count}>
+              {links.length} {links.length === 1 ? 'link' : 'links'}
+            </span>
+          ) : null}
+          {manageUrl ? (
+            <a className={styles.manage} href={manageUrl} target="_blank" rel="noopener noreferrer">
+              Manage links
+              <span className={styles.srOnly}> (opens the Quick Links list in a new tab)</span>
+            </a>
+          ) : null}
+        </span>
       </div>
 
-      {links.length === 0 ? (
-        <p className={styles.empty}>No quick links configured yet.</p>
+      {loading ? (
+        <ul className={styles.grid} style={gridStyle} aria-busy="true" aria-label="Loading quick links">
+          {[0, 1, 2, 3].slice(0, Math.max(cols, 2)).map((i) => (
+            <li key={i}>
+              <span className={`${styles.card} ${styles.skeletonCard}`} aria-hidden="true">
+                <span className={`${styles.iconTile} ${styles.skeleton}`} />
+                <span className={styles.body}>
+                  <span className={`${styles.skeleton} ${styles.skeletonLine}`} />
+                  <span className={`${styles.skeleton} ${styles.skeletonLine} ${styles.skeletonShort}`} />
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : notice ? (
+        <div className={`${styles.notice} ${notice.tone === 'error' ? styles.noticeError : ''}`} role={notice.tone === 'error' ? 'alert' : undefined}>
+          <p>{notice.message}</p>
+          {notice.actionLabel && notice.onAction ? (
+            <button type="button" className={styles.noticeButton} onClick={notice.onAction} disabled={notice.busy}>
+              {notice.busy ? notice.busyLabel || 'Working…' : notice.actionLabel}
+            </button>
+          ) : null}
+        </div>
+      ) : links.length === 0 ? (
+        <p className={styles.empty}>
+          No links to show yet.{manageUrl ? ' Add one with Manage links, and set Show to Yes.' : ''}
+        </p>
       ) : (
         <ul className={styles.grid} style={gridStyle}>
           {links.map((link) => {

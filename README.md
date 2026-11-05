@@ -33,6 +33,7 @@ Use the floating ⚙ button (bottom right) to:
 - toggle **Dark mode** (`isDarkTheme`)
 - change **Visible columns** in Quick Links (`quickLinksColumns`, 1–6)
 - *(demo only)* change the simulated SharePoint section width to check the responsive grid
+- *(demo only)* simulate the Quick Links list: loading, not created yet, or empty
 - *(demo only)* simulate the To Do connection: loading, load error, or a failed save
 
 Settings are saved in `localStorage`, so they survive a reload.
@@ -70,6 +71,36 @@ You need to be a SharePoint admin, or have rights to the tenant App Catalog.
 4. Edit any modern page, click **+**, search for **Employee Dashboard**, add it and **Republish**.
 5. Click the web part's ✏️ edit icon to open the property pane: Dark mode, Visible columns, Task source.
 
+### Quick Links list
+
+Quick Links come from a SharePoint list on the same site, **Dashboard Quick Links** by default
+(change the name under *Quick Links → Links list* in the property pane). Edit links in the list:
+no rebuild or redeploy.
+
+**First-time setup:** when the list doesn't exist, site owners see a **Create list** button in the
+web part. It creates the list, its columns, locks down permissions (below), and adds the 8 example
+links. Email, Calendar and Teams are shown; the 5 placeholders without a real URL are created with
+**Show = No**. Fill in their URL and set Show to Yes when you have them.
+
+| Column | What it does |
+| --- | --- |
+| Title | Card heading |
+| Description | Small text under the title (optional) |
+| URL | Where the card goes. Only `https://`, `http://` or site paths (`/sites/...`) are used |
+| Icon | mail, people, receipt, calendar, chat, laptop, book, heart, folder, chart |
+| Colour | Hex colour for the icon tile, e.g. `#2563eb` (blank = theme colour) |
+| Order | Lower numbers show first |
+| Open in new tab | Yes / No |
+| Show | No hides the card without deleting it |
+
+People who can edit the list see a **Manage links** link next to the heading.
+
+**Permissions:** the list stops inheriting site permissions when it's created, so only site
+**Owners** can edit it; **Members** and **Visitors** get Read. If you create or reuse a list yourself,
+lock it down the same way: *List settings → Permissions for this list → Stop Inheriting
+Permissions*, then select the Members group → *Edit User Permissions* → **Read**. To let a few
+named people maintain links, add them (or a group) with **Edit** on that list only.
+
 ### Approve the To Do permission (one time)
 
 My Tasks reads and updates each person's own Microsoft To Do tasks through Microsoft Graph, using
@@ -96,7 +127,11 @@ To ship an update, bump `version` in `config/package-solution.json`, rebuild, an
 - `src/webparts/employeeDashboard/EmployeeDashboardWebPart.ts` reads the signed-in user from
   `this.context.pageContext.user`, loads their profile photo, and defines the real property pane.
 - `src/components/` is shared by the web part and the demo.
+- `src/services/QuickLinksService.ts` reads Quick Links from the site list, and creates and locks
+  down that list (SharePoint REST via `SPHttpClient`).
 - `src/services/TodoTaskService.ts` loads and updates Microsoft To Do tasks via Graph
   (`MSGraphClientV3`).
+- `src/components/defaultQuickLinks.ts` holds the example links used by the demo and as the
+  list's starter rows.
 - `src/components/sampleTasks.ts` holds the example tasks used when **Task source** is
   **Sample tasks**, and in the demo.

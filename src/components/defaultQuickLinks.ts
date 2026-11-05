@@ -1,6 +1,10 @@
 import { IQuickLink } from './IEmployeeDashboardProps';
 
-/** Used when the host doesn't pass its own `quickLinks`. Swap URLs for your tenant. */
+/**
+ * Example links: used by the demo, and as the starter rows when the web part creates the
+ * "Dashboard Quick Links" list. Rows whose URL is a placeholder (starts with #) are created
+ * hidden, so they don't show until someone adds a real URL in the list.
+ */
 export const DEFAULT_QUICK_LINKS: IQuickLink[] = [
   {
     id: 'email',

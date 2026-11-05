@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { EmployeeDashboard, ITask, SAMPLE_TASKS, clampColumns } from '../src/components';
-import { CANVAS_LAYOUTS, CanvasLayout, FloatingControlPanel, TaskState } from './FloatingControlPanel';
+import { DEFAULT_QUICK_LINKS, EmployeeDashboard, IDashboardNotice, ITask, SAMPLE_TASKS, clampColumns } from '../src/components';
+import { CANVAS_LAYOUTS, CanvasLayout, FloatingControlPanel, LinksState, TaskState } from './FloatingControlPanel';
 import { DEFAULT_WEB_PART_PROPERTIES, IEmployeeDashboardWebPartProps, getPropertyPaneConfiguration } from './mockPropertyPane';
 import { mockUser } from './mockContext';
 
@@ -47,6 +47,25 @@ export const DemoApp: React.FC = () => {
 
   // Not persisted: the demo always opens with real data showing.
   const [taskState, setTaskState] = React.useState<TaskState>('loaded');
+  const [linksState, setLinksState] = React.useState<LinksState>('loaded');
+  const [creating, setCreating] = React.useState(false);
+
+  const linksNotice: IDashboardNotice | undefined =
+    linksState === 'missing'
+      ? {
+          message: 'There\'s no "Dashboard Quick Links" list on this site yet. Create it to manage these links from a SharePoint list.',
+          actionLabel: 'Create list',
+          busy: creating,
+          busyLabel: 'Creating list…',
+          onAction: () => {
+            setCreating(true);
+            window.setTimeout(() => {
+              setCreating(false);
+              setLinksState('loaded');
+            }, 1200);
+          },
+        }
+      : undefined;
 
   const onTaskToggle = React.useCallback(
     (task: ITask): Promise<void> => {
@@ -74,6 +93,10 @@ export const DemoApp: React.FC = () => {
           user={mockUser}
           isDarkTheme={state.isDarkTheme}
           quickLinksColumns={clampColumns(state.quickLinksColumns)}
+          quickLinks={linksState === 'empty' ? [] : DEFAULT_QUICK_LINKS}
+          quickLinksLoading={linksState === 'loading'}
+          quickLinksNotice={linksNotice}
+          quickLinksManageUrl={linksState === 'loaded' || linksState === 'empty' ? '#manage-links' : undefined}
           tasks={SAMPLE_TASKS}
           tasksLoading={taskState === 'loading'}
           tasksError={taskState === 'error' ? LOAD_ERROR : undefined}
@@ -93,6 +116,8 @@ export const DemoApp: React.FC = () => {
         onCanvasLayoutChange={(canvasLayout) => setState((s) => ({ ...s, canvasLayout }))}
         taskState={taskState}
         onTaskStateChange={setTaskState}
+        linksState={linksState}
+        onLinksStateChange={setLinksState}
       />
     </div>
   );

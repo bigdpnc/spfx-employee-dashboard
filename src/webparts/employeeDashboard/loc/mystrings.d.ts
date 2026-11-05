@@ -11,6 +11,15 @@ declare interface IEmployeeDashboardWebPartStrings {
   TodoLoadError: string;
   TodoPermissionError: string;
   TodoNoMailboxError: string;
+  LinksListLabel: string;
+  LinksListDescription: string;
+  LinksListMissingOwner: string;
+  LinksListMissingVisitor: string;
+  LinksLoadError: string;
+  CreateList: string;
+  CreatingList: string;
+  CreateListError: string;
+  TryAgain: string;
   On: string;
   Off: string;
 }
